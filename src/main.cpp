@@ -1,15 +1,32 @@
 #include <iostream>
 #include <string>
 
+#include <cassert>
+#include <cstring>
+#define _USE_MATH_DEFINES
+#include <cmath>
+#include <iostream>
+
+
+
+
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
+
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
-
+#define GLM_FORCE_RADIANS
+#include </Programming\ assignment/GBIN/glm-master/glm/glm.hpp>
+#include </glm/gtc/type_ptr.hpp>
 #include "Image.h"
+#include "Camera.h"
 
 // This allows you to skip the `std::` in front of C++ standard library
 // functions. You can also say `using std::cout` to be more selective.
 // You should never do this in a header file.
 using namespace std;
+
+
 
 double RANDOM_COLORS[7][3] = {
 	{0.0000,    0.4470,    0.7410},
