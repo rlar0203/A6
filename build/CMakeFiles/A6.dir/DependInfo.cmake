@@ -8,8 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/mnt/c/Users/rlar0/Documents/Programming assignment/CSCE 441/A6/src/Image.cpp" "CMakeFiles/A6.dir/src/Image.cpp.o" "gcc" "CMakeFiles/A6.dir/src/Image.cpp.o.d"
-  "/mnt/c/Users/rlar0/Documents/Programming assignment/CSCE 441/A6/src/main.cpp" "CMakeFiles/A6.dir/src/main.cpp.o" "gcc" "CMakeFiles/A6.dir/src/main.cpp.o.d"
+  "/mnt/c/Users/rlar0/Documents/C++_files/CSCE 441/A6/src/Image.cpp" "CMakeFiles/A6.dir/src/Image.cpp.o" "gcc" "CMakeFiles/A6.dir/src/Image.cpp.o.d"
+  "/mnt/c/Users/rlar0/Documents/C++_files/CSCE 441/A6/src/main.cpp" "CMakeFiles/A6.dir/src/main.cpp.o" "gcc" "CMakeFiles/A6.dir/src/main.cpp.o.d"
   )
 
 # Targets to which this target links.

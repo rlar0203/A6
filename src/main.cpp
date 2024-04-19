@@ -8,18 +8,15 @@
 #include <iostream>
 
 
-
-
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"
-
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
+
 #define GLM_FORCE_RADIANS
-#include </Programming\ assignment/GBIN/glm-master/glm/glm.hpp>
-#include </glm/gtc/type_ptr.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "Image.h"
-#include "Camera.h"
+#include "Rays.h"
 
 // This allows you to skip the `std::` in front of C++ standard library
 // functions. You can also say `using std::cout` to be more selective.
@@ -92,6 +89,31 @@ int main(int argc, char **argv)
 		}
 	}
 	cout << "Number of vertices: " << posBuf.size()/3 << endl;
+
+//chooses the scene dependent on the integer passed thorguh
+	switch (stoi([1]))
+	{
+	case 1:
+	{	/* code */
+		break;
+	}
+	case 2:
+	{
+
+	break;
+	}
+		
+	
+	case 3:
+	{
+
+		
+
+	}
+
+	default:
+		break;
+	}
 	
 	return 0;
 }
