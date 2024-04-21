@@ -90,7 +90,7 @@ vector<vec3> Rays (max_dimension*max_dimension, vec3(0.0,0.0,0.0));
 
     
 
-
+            //ellipsoid/sphere object 
     class Ellipsoid : public Object
     {
         private:
@@ -104,8 +104,7 @@ vector<vec3> Rays (max_dimension*max_dimension, vec3(0.0,0.0,0.0));
         //assumes no scale and a rotation of zero around the xy axis 
         Ellipsoid( vec3 point, vec3 kd, vec3 ka, vec3 ks, double s, vec3 SCALE = vec3(1.00,1.00,1.00), vec3 Rotation_axis = vec3(1,1,0), double rotation_angle = 0 ): Object(point,kd,ka,ks,s){
             //applies the transformations and stores them in E matrix
-            E = scale(E, SCALE);
-            E = rotate(E,rotation_angle,Rotation_axis);
+            E = scale(E, SCALE) * rotate(E,rotation_angle,Rotation_axis);
 
         }
 
@@ -116,18 +115,71 @@ vector<vec3> Rays (max_dimension*max_dimension, vec3(0.0,0.0,0.0));
 
             vector<vec3> Results(3,vec3(0.0,0.0,0.0));
 
-        //storing values to be used in calculating t 
-        double a = dot(T_raydir , T_rayorig);
-        double b = 2* dot(v,(T_rayorig - point));
-        double d = (b*b) - (4*a*());
+
+        //storing values to be used in calculating if a hit occurs or not and to make it easier to understand
+        double a = dot(T_raydir , T_raydir);
+        double b = 2* dot(T_raydir,(T_rayorig - point));
+        double c = dot((T_rayorig - point),(T_rayorig - point)) - radius;
+        double d = (b*b) - (4*a*c);
 
 
-        // TODO FINISH ELLIPSOID/SPHERE RAY TRACER THEN DO THE PHONG FUNCTION 
-        // - finsih calculations in ray tracer 
-        // - 
-        if()
+        //handles d being negative (NO HIT)
+        if( d < -0.0001){
+            //returns an vec3 with empty dir and normal and a vec3 full of negative distances to indicate a miss
+            Results.at(0).x = vec3(-1.0,-1.0,-1.0);
+
+            //don't have to worry about transforming since we missed and so it isn't needed 
+            return Results;
+
+        }
+        //handles d being greater than 0 or value near 0 due to accuracy issues   (2 HITS)
+        else if( d > 0.0001){
+            
+            //calculates the  distance of the two hits and uses the smallest one in the calculations
+
+            double t1 = (-b + sqrt(d))/ (2*a)
+            double t2 = ((-b - sqrt(d))/ (2*a))
 
 
+            //choses lowest distance (positive)
+            Results.at(0).x = (t1 < t2 && t1 >= 0) ?  t1:  t2;
+
+            //using lowest distance calculates HIT POSTION
+            Results.at(1) = T_rayorig + Results.at(0).x * T_raydir;
+
+
+            //calculates the normal 
+            Results.at(2) = (Results.at(1) - point)/(r);
+        }
+        //handles condition is near 0  (1 HIT)
+        else{
+            //since d = 0 uses simplified quadratic formula
+             Results.at(0).x = -b / (2*a);
+
+            //using lowest distance calculates HIT POSTION
+            Results.at(1) = T_rayorig + Results.at(0).x * T_raydir;
+
+
+            //calculates the normal 
+            Results.at(2) = (Results.at(1) - point)/(r);
+
+            
+        }
+         //transforms hit pos and hit norm back to world coords and rederives the distance in world coords
+        
+        Results.at(1) = (E * Results.at(1));
+
+        //renormalizes just in case of length no longer being 1 for normal.
+        Results.at(2) =  normalize(E * Results.at(2));
+
+
+        //gets the distance from the world coord ray hit postiion and direction
+        Results.at(0).x =  glm::length(Results.at(1) - Ray_origin);
+
+        //gets negative of the value if the dot product of difference of (hit point and ray origin point) and ray direction
+        if( dot(Ray_dir,Results.at(1) - Ray_origin) < 0 ){
+            Results.at(0).x = -(Results.at(0).x)
+        }
 
             return Results;
         }
