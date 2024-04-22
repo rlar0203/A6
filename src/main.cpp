@@ -14,7 +14,7 @@
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
+#include <memory>
 #include "Image.h"
 #include "Rays.h"
 
@@ -42,7 +42,11 @@ int main(int argc, char **argv)
 		return 0;
 	}
 	string meshName(argv[1]);
-
+	string output_name(argv[2]);
+		int width = 1000;
+		int height = 1000;
+		int task;
+		shared_ptr<Image> image = make_shared<Image>(width, height);
 	// Load geometry
 	vector<float> posBuf; // list of vertex positions
 	vector<float> norBuf; // list of vertex normals
@@ -91,11 +95,31 @@ int main(int argc, char **argv)
 	cout << "Number of vertices: " << posBuf.size()/3 << endl;
 
 //chooses the scene dependent on the integer passed thorguh
-	switch (stoi([1]))
+	switch (stoi(argv[1]))
 	{
+		//just testing hit detection
 	case 1:
-	{	/* code */
-		break;
+	{	
+		vector<vec3> rays = Ray_gen(vec3(0.0,0.0,5.0),vec3(0.0,0.0,4.0),width,height);
+		//printf("size is %d \n", (int) rays.size());
+
+		Ellipsoid sus (vec3(0.0,0.0,0.0),vec3(1.0,0.0,0.0),vec3(0.1,0.1,0.1),vec3(1.0,1.0,0.5),100.0);
+
+	for(int i = 0 ; i < (int)rays.size() ;i++){
+		//printf("ray at %d,%d is vec3 (%f,%f,%f)\n",i/3,i%3,rays.at(i).x,rays.at(i).y,rays.at(i).z);
+
+		vector<vec3> result = sus.single_raytrace(rays.at(i),vec3(0,0,5));
+
+		//printf(" results are distance %f and hit position %f,%f,%f\n\n\n", result.at(0).x, result.at(1).x,result.at(1).y,result.at(1).z);
+		
+		if(result.at(0).x >= 0){
+			image->setPixel(i/width,i%height,0,0,100 + 10 * result.at(0).x);
+		}
+		else{
+			image->setPixel(i/width,i%height,0,0,0);
+		}
+	 }
+	 break;
 	}
 	case 2:
 	{
@@ -114,6 +138,7 @@ int main(int argc, char **argv)
 	default:
 		break;
 	}
-	
+		//writes out the image to certain filename.
+	image->writeToFile("TEST_output.png");
 	return 0;
 }

@@ -390,5 +390,19 @@ CMakeFiles/A6.dir/src/main.cpp.o: \
  /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/glm-master/glm-master/glm/gtc/../gtc/../ext/vector_uint1.hpp \
  /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/glm-master/glm-master/glm/gtc/../gtc/../ext/vector_uint1_sized.hpp \
  /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/glm-master/glm-master/glm/gtc/type_ptr.inl \
+ /usr/include/c++/11/memory /usr/include/c++/11/bits/stl_tempbuf.h \
+ /usr/include/c++/11/bits/stl_raw_storage_iter.h \
+ /usr/include/c++/11/bits/align.h /usr/include/c++/11/bit \
+ /usr/include/c++/11/bits/unique_ptr.h \
+ /usr/include/c++/11/bits/shared_ptr.h \
+ /usr/include/c++/11/bits/shared_ptr_base.h \
+ /usr/include/c++/11/bits/allocated_ptr.h \
+ /usr/include/c++/11/bits/refwrap.h /usr/include/c++/11/ext/concurrence.h \
+ /usr/include/c++/11/bits/shared_ptr_atomic.h \
+ /usr/include/c++/11/bits/atomic_base.h \
+ /usr/include/c++/11/bits/atomic_lockfree_defines.h \
+ /usr/include/c++/11/backward/auto_ptr.h \
+ /usr/include/c++/11/pstl/glue_memory_defs.h \
+ /usr/include/c++/11/pstl/execution_defs.h \
  /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/A6/src/Image.h \
  /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/A6/src/Rays.h

@@ -661,11 +661,44 @@ CMakeFiles/A6.dir/src/main.cpp.o: ../src/main.cpp \
   /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/glm-master/glm-master/glm/ext/vector_uint1.hpp \
   /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/glm-master/glm-master/glm/ext/vector_uint1_sized.hpp \
   /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/glm-master/glm-master/glm/gtc/type_ptr.inl \
+  /usr/include/c++/11/memory \
+  /usr/include/c++/11/bits/stl_tempbuf.h \
+  /usr/include/c++/11/bits/stl_raw_storage_iter.h \
+  /usr/include/c++/11/bits/align.h \
+  /usr/include/c++/11/bit \
+  /usr/include/c++/11/bits/unique_ptr.h \
+  /usr/include/c++/11/bits/shared_ptr.h \
+  /usr/include/c++/11/bits/shared_ptr_base.h \
+  /usr/include/c++/11/bits/allocated_ptr.h \
+  /usr/include/c++/11/bits/refwrap.h \
+  /usr/include/c++/11/ext/concurrence.h \
+  /usr/include/c++/11/bits/shared_ptr_atomic.h \
+  /usr/include/c++/11/bits/atomic_base.h \
+  /usr/include/c++/11/bits/atomic_lockfree_defines.h \
+  /usr/include/c++/11/backward/auto_ptr.h \
+  /usr/include/c++/11/pstl/glue_memory_defs.h \
+  /usr/include/c++/11/pstl/execution_defs.h \
   ../src/Image.h \
   ../src/Rays.h
 
 
 ../src/Rays.h:
+
+/usr/include/c++/11/pstl/execution_defs.h:
+
+/usr/include/c++/11/pstl/glue_memory_defs.h:
+
+/usr/include/c++/11/bits/shared_ptr_atomic.h:
+
+/usr/include/c++/11/bits/refwrap.h:
+
+/usr/include/c++/11/bits/allocated_ptr.h:
+
+/usr/include/c++/11/bits/unique_ptr.h:
+
+/usr/include/c++/11/bit:
+
+/usr/include/c++/11/memory:
 
 /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/glm-master/glm-master/glm/gtc/type_ptr.inl:
 
@@ -679,11 +712,15 @@ CMakeFiles/A6.dir/src/main.cpp.o: ../src/main.cpp \
 
 /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/glm-master/glm-master/glm/ext/vector_float1_precision.hpp:
 
+/usr/include/c++/11/backward/auto_ptr.h:
+
 /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/glm-master/glm-master/glm/ext/vector_float1.hpp:
 
 /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/glm-master/glm-master/glm/gtc/quaternion.inl:
 
 /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/glm-master/glm-master/glm/ext/quaternion_transform.inl:
+
+/usr/include/c++/11/bits/stl_raw_storage_iter.h:
 
 /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/glm-master/glm-master/glm/ext/quaternion_transform.hpp:
 
@@ -697,6 +734,8 @@ CMakeFiles/A6.dir/src/main.cpp.o: ../src/main.cpp \
 
 /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/glm-master/glm-master/glm/detail/type_quat.hpp:
 
+/usr/include/c++/11/bits/atomic_base.h:
+
 /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/glm-master/glm-master/glm/ext/quaternion_common.inl:
 
 /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/glm-master/glm-master/glm/ext/vector_bool1_precision.hpp:
@@ -704,6 +743,8 @@ CMakeFiles/A6.dir/src/main.cpp.o: ../src/main.cpp \
 /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/glm-master/glm-master/glm/ext/quaternion_geometric.inl:
 
 /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/glm-master/glm-master/glm/detail/type_float.hpp:
+
+/usr/include/c++/11/bits/align.h:
 
 /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/glm-master/glm-master/glm/ext/vector_relational.hpp:
 
@@ -847,6 +888,8 @@ CMakeFiles/A6.dir/src/main.cpp.o: ../src/main.cpp \
 
 /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/glm-master/glm-master/glm/ext/vector_int4.hpp:
 
+/usr/include/c++/11/ext/concurrence.h:
+
 /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/glm-master/glm-master/glm/ext/vector_double4_precision.hpp:
 
 /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/glm-master/glm-master/glm/ext/vector_uint4_sized.hpp:
@@ -918,6 +961,8 @@ CMakeFiles/A6.dir/src/main.cpp.o: ../src/main.cpp \
 /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/glm-master/glm-master/glm/fwd.hpp:
 
 /usr/lib/gcc/x86_64-linux-gnu/11/include/float.h:
+
+/usr/include/c++/11/bits/shared_ptr.h:
 
 /usr/include/c++/11/bits/stl_construct.h:
 
@@ -1141,6 +1186,8 @@ CMakeFiles/A6.dir/src/main.cpp.o: ../src/main.cpp \
 
 ../src/Image.cpp:
 
+/usr/include/c++/11/bits/stl_tempbuf.h:
+
 /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/glm-master/glm-master/glm/simd/platform.h:
 
 /usr/include/x86_64-linux-gnu/bits/cpu-set.h:
@@ -1194,6 +1241,8 @@ CMakeFiles/A6.dir/src/main.cpp.o: ../src/main.cpp \
 /usr/include/x86_64-linux-gnu/bits/wchar.h:
 
 /usr/include/x86_64-linux-gnu/bits/local_lim.h:
+
+/usr/include/c++/11/bits/shared_ptr_base.h:
 
 /usr/include/c++/11/bits/basic_string.h:
 
@@ -1398,6 +1447,8 @@ CMakeFiles/A6.dir/src/main.cpp.o: ../src/main.cpp \
 /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/glm-master/glm-master/glm/ext/scalar_int_sized.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/math-vector.h:
+
+/usr/include/c++/11/bits/atomic_lockfree_defines.h:
 
 ../src/Image.h:
 
