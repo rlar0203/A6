@@ -247,14 +247,34 @@ struct RESULTS{
     };
 
 // colors pixels based on data given 
-    void Phong_Shader(vector<vec3> &Rays, vector<Object*> &objects, vector<vec3>& light_pos, vector<vec3>& light_color){
-            
+    void Phong_Shader(vector<vec3> &Rays,vec3 ray_origin ,vector<Object*> &objects, vector<vec3>& light_pos, vector<vec3>& light_color){
+
+    for (int i = 0; i < (int)Rays.size(); i++)
+    {
+        //will be overwritten when passed into the function 
+       RESULTS phong_stats;
+       if( Ray_Hit(Rays.at(i),ray_origin,objects,phong_stats)){
+            /*do the phong shading*/
+
+
+          
+       }
+       /* will deal with shadows in here using shadow tracer*/
+       else{
+        /*color black if not hit */
+       }
+        
+
+    }
+        
+        
+        
 
 
     }
 
 //raytracing hit funciton (will return the object material properties associated with the smallest positive distance from ray origin to hit postion) and takes in returnvalues as an arg which will store the postion values 
- RESULTS Ray_Hit(vec3 ray_dir,vec3 ray_origin, vector<Object*>& shapes, vector<vec3>& return_values ){
+ bool Ray_Hit(vec3 ray_dir,vec3 ray_origin, vector<Object*>& shapes, vector<vec3>& return_values ){
     //sets shape index to negative 1 to indicate we haven't hit anything
     double min_dist;
     int shape_index = -1;
@@ -285,7 +305,7 @@ struct RESULTS{
         phong_info.hit_norm = return_values.at(2);
 
         phong_info.distance = min_dist;
-    return phong_info;    
+
 
 }
     

@@ -43,9 +43,9 @@ int main(int argc, char **argv)
 	}
 	string meshName(argv[1]);
 	string output_name(argv[2]);
-		int width = 1000;
-		int height = 1000;
-		int task;
+		int width = 516;
+		int height = 516;
+		//int scene;
 		shared_ptr<Image> image = make_shared<Image>(width, height);
 	// Load geometry
 	vector<float> posBuf; // list of vertex positions
@@ -102,7 +102,7 @@ int main(int argc, char **argv)
 	{	
 		vector<vec3> rays = Ray_gen(vec3(0.0,0.0,5.0),vec3(0.0,0.0,4.0),width,height);
 		//printf("size is %d \n", (int) rays.size());
-
+		vector<Object*> test;
 		Ellipsoid sus (vec3(0.0,0.0,0.0),vec3(1.0,0.0,0.0),vec3(0.1,0.1,0.1),vec3(1.0,1.0,0.5),100.0);
 
 	for(int i = 0 ; i < (int)rays.size() ;i++){
