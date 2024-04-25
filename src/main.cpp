@@ -43,8 +43,8 @@ int main(int argc, char **argv)
 	}
 	string meshName(argv[1]);
 	string output_name(argv[2]);
-		int width = 516;
-		int height = 516;
+		int width = 255;
+		int height = 255;
 		//int scene;
 		shared_ptr<Image> image = make_shared<Image>(width, height);
 	// Load geometry
@@ -104,20 +104,21 @@ int main(int argc, char **argv)
 		//printf("size is %d \n", (int) rays.size());
 		vector<Object*> test;
 		Ellipsoid sus (vec3(0.0,0.0,0.0),vec3(1.0,0.0,0.0),vec3(0.1,0.1,0.1),vec3(1.0,1.0,0.5),100.0);
-
+		test.push_back(&sus);
 	for(int i = 0 ; i < (int)rays.size() ;i++){
 		//printf("ray at %d,%d is vec3 (%f,%f,%f)\n",i/3,i%3,rays.at(i).x,rays.at(i).y,rays.at(i).z);
 
-		vector<vec3> result = sus.single_raytrace(rays.at(i),vec3(0,0,5));
+		vector<vec3> result = test.at(0)->single_raytrace(rays.at(i),vec3(0,0,5));
 
 		//printf(" results are distance %f and hit position %f,%f,%f\n\n\n", result.at(0).x, result.at(1).x,result.at(1).y,result.at(1).z);
 		
 		if(result.at(0).x >= 0){
-			image->setPixel(i/width,i%height,0,0,100 + 10 * result.at(0).x);
+			image->setPixel(i/width,i%height,0,255,0);
 		}
 		else{
 			image->setPixel(i/width,i%height,0,0,0);
 		}
+
 	 }
 	 break;
 	}

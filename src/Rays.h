@@ -246,37 +246,15 @@ struct RESULTS{
         
     };
 
-// colors pixels based on data given 
-    void Phong_Shader(vector<vec3> &Rays,vec3 ray_origin ,vector<Object*> &objects, vector<vec3>& light_pos, vector<vec3>& light_color){
 
-    for (int i = 0; i < (int)Rays.size(); i++)
-    {
-        //will be overwritten when passed into the function 
-       RESULTS phong_stats;
-       if( Ray_Hit(Rays.at(i),ray_origin,objects,phong_stats)){
-            /*do the phong shading*/
-
-
-          
-       }
-       /* will deal with shadows in here using shadow tracer*/
-       else{
-        /*color black if not hit */
-       }
-        
-
-    }
-        
-        
-        
-
-
-    }
 
 //raytracing hit funciton (will return the object material properties associated with the smallest positive distance from ray origin to hit postion) and takes in returnvalues as an arg which will store the postion values 
  bool Ray_Hit(vec3 ray_dir,vec3 ray_origin, vector<Object*>& shapes, vector<vec3>& return_values ){
     //sets shape index to negative 1 to indicate we haven't hit anything
     double min_dist;
+    bool hit = 0;
+
+
     int shape_index = -1;
     return_values = shapes.at(0)->single_raytrace(ray_dir, ray_origin);
     //sets to first shape to first shape distance 
@@ -306,10 +284,57 @@ struct RESULTS{
 
         phong_info.distance = min_dist;
 
+    hit = (min_dist >= 0.0001)? 1 : 0 ;
 
+    return hit;
 }
-    
+ 
+  // colors pixels based on data given 
+  
+vec3 ray_color_gen(vector<vec3> &Rays,vec3 ray_origin ,vector<Object*> &objects, vector<vec3>& light_pos, vector<vec3>& light_color){
 
+    for (int i = 0; i < (int)Rays.size(); i++)
+    {
+
+        //will be overwritten when passed into the function 
+       RESULTS phong_stats;
+       if( Ray_Hit(Rays.at(i),ray_origin,objects,phong_stats)){
+        vec3 color = phong_stats.ka;
+
+        //calculates the phong shader using each light given
+        for (size_t i = 0; i < light_pos.size(); i++)
+        {
+          //  do second part of the phong shader 
+        vec3 n = 
+
+        color + light_color.at(i) * (phong_stats.kd*max(0,dot(phong_stats.hit_norm,)) + phong_stats.ks*max(0,dot(phong_stats.hit_norm,)))
+
+        }
+        
+
+
+
+          
+       }
+        //will deal with shadows in here using shadow tracer
+
+       else{
+        //colors image black if not hit 
+        color = vec3(0,0,0);
+        
+       }
+
+       return color;
+        
+
+    }
+        
+        
+        
+
+
+    }
+    */
     
     
     
