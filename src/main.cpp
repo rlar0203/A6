@@ -43,8 +43,8 @@ int main(int argc, char **argv)
 	}
 	string meshName(argv[1]);
 	string output_name(argv[2]);
-		int width = 255;
-		int height = 255;
+		int width = 10;
+		int height = 10;
 		//int scene;
 		shared_ptr<Image> image = make_shared<Image>(width, height);
 	// Load geometry
@@ -100,25 +100,24 @@ int main(int argc, char **argv)
 		//just testing hit detection
 	case 1:
 	{	
-		vector<vec3> rays = Ray_gen(vec3(0.0,0.0,5.0),vec3(0.0,0.0,4.0),width,height);
-		//printf("size is %d \n", (int) rays.size());
-		vector<Object*> test;
-		Ellipsoid sus (vec3(0.0,0.0,0.0),vec3(1.0,0.0,0.0),vec3(0.1,0.1,0.1),vec3(1.0,1.0,0.5),100.0);
-		test.push_back(&sus);
-	for(int i = 0 ; i < (int)rays.size() ;i++){
-		//printf("ray at %d,%d is vec3 (%f,%f,%f)\n",i/3,i%3,rays.at(i).x,rays.at(i).y,rays.at(i).z);
-
-		vector<vec3> result = test.at(0)->single_raytrace(rays.at(i),vec3(0,0,5));
-
-		//printf(" results are distance %f and hit position %f,%f,%f\n\n\n", result.at(0).x, result.at(1).x,result.at(1).y,result.at(1).z);
+		vector<vec3> rays = Ray_gen(vec3(0.0,0.0,5.0),vec3(0.0,0.0,4.0),height,width);
 		
-		if(result.at(0).x >= 0){
-			image->setPixel(i/width,i%height,0,255,0);
-		}
-		else{
-			image->setPixel(i/width,i%height,0,0,0);
-		}
+		vector<Object*> test;
+		vector<vec3> light_pos;
+		vector<vec3> light_color;
+		light_pos.push_back(vec3(-2.0, 1.0, 1.0));
+		light_color.push_back(vec3(1.0,1.0,1.0));
+		test.push_back(new Ellipsoid(vec3(-0.5,-1.0,1.0),vec3(1.0,0.0,0.0),vec3(0.1,0.1,0.1),vec3(1.0,1.0,0.5),100.0));
+		test.push_back(new Ellipsoid(vec3(0.5, -1.0, -1.0),vec3(0.0,1.0,0.0),vec3(0.1,0.1,0.1),vec3(1.0,1.0,0.5),100.0));
+		//test.push_back(new Ellipsoid(vec3(0.0, 1.0, 0.0),vec3(1.0,0.0,0.0),vec3(0.1,0.1,0.1),vec3(1.0,1.0,0.5),100.0));
 
+	for(int n = 0 ; n < (int)rays.size() ;n++){
+
+		vec3 color = ray_color_gen(rays.at(n),vec3(0.0,0.0,5.0),test,light_pos,light_color);
+		 color.x = (color.x *255 > 255)? 255 : color.x * 255;
+		 color.y = (color.y*255 > 255)? 255 : color.y * 255;
+		 color.z = (color.z*255 > 255)? 255 : color.z * 255;
+		image->setPixel(n/width,n%width,color.r,color.g,color.b);
 	 }
 	 break;
 	}
