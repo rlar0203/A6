@@ -77,6 +77,7 @@ struct RESULTS{
         vec3 ks;
         vec3 ka;
         double s;
+        bool reflect;
 };
 
 
@@ -92,13 +93,15 @@ struct RESULTS{
         vec3 kd;
         vec3 ks;
         vec3 ka;
+        bool reflective;
         double s;
     //basic constructor for the object so we can all the constructor inside the subshape constructors
-        Object(vec3 point,vec3 kd, vec3 ka, vec3 ks, double s): point(point) {
+        Object(vec3 point,vec3 kd, vec3 ka, vec3 ks, double s, bool reflective): point(point), reflective(reflective) {
                 this->kd = kd;
                 this->ks = ks;
                 this->ka = ka;
                 this->s = s;
+               
         };
         virtual ~Object() {};
         //basic function to be overloaded by children classes
@@ -124,7 +127,7 @@ struct RESULTS{
 
         public:
         //assumes no scale and a rotation of zero around the xy axis 
-        Ellipsoid( vec3 point, vec3 kd, vec3 ka, vec3 ks, double s,vec3 TRANSLATION = vec3(0.0,0.0,0.0) ,vec3 SCALE = vec3(1.0,1.0,1.0), vec3 Rotation_axis = vec3(0.0,1.0,0.0), float rotation_angle = 0.0 ): Object(point,kd,ka,ks,s){
+        Ellipsoid( vec3 point, vec3 kd, vec3 ka, vec3 ks, double s, bool ref = false ,vec3 TRANSLATION = vec3(0.0,0.0,0.0) ,vec3 SCALE = vec3(1.0,1.0,1.0), vec3 Rotation_axis = vec3(0.0,1.0,0.0), float rotation_angle = 0.0 ): Object(point,kd,ka,ks,s,ref){
             //applies the transformations and stores them in E matrix
             E = translate(E,TRANSLATION) * glm::rotate(mat4(1.0),rotation_angle,Rotation_axis)*scale(E, SCALE);
 
@@ -219,7 +222,7 @@ struct RESULTS{
     vec3 normal;
     public:
     // creates plane and initalizes values in parent 
-        plane(vec3 normal, vec3 point, vec3 kd, vec3 ka, vec3 ks, double s): Object(point,kd,ka,ks,s){
+        plane(vec3 normal, vec3 point, vec3 kd, vec3 ka, vec3 ks, double s, bool reflective = 0): Object(point,kd,ka,ks,s,reflective){
             this->normal = normal;
         };
         //does ray_tracing for a singluar ray and returns the hit position, hit normal and the hit distance 
@@ -290,6 +293,7 @@ struct RESULTS{
         phong_info.ks = shapes.at(shape_index)->ks;
         phong_info.ka = shapes.at(shape_index)->ka;
         phong_info.s = shapes.at(shape_index)->s;
+        phong_info.reflect = shapes.at(shape_index)->reflective;
 
     } 
  
@@ -333,18 +337,63 @@ struct RESULTS{
  
 
 
-  // colors pixels based on data given 
+
+    //recursive coloring function 
+    vec3 ray_color_recur(vec3 Ray,vec3 origin ,vector<Object*> &objects, vector<vec3>& light_pos, vector<vec3>& light_color, RESULTS& phong_stats ,int& counter){
+        
+        
+        
+        
+        vec3 color = vec3(0,0,0);
+      
+        //does light calculation of point hit by reflected ray
+        if( Ray_Hit(Ray,origin,objects,phong_stats)){
+         color = phong_stats.ka;
+        //normalizes as a precautionary measure
+        vec3 n = normalize(phong_stats.hit_norm);
+         vec3 e = normalize(origin - phong_stats.hit_pos);
+        //calculates the phong shader using each light given
+        for (size_t i = 0; i < light_pos.size(); i++)
+        {
+        vec3 light_dir = normalize(light_pos.at(i) - phong_stats.hit_pos);
+       
+        vec3 h = normalize(light_dir + e);
+        double light_dist = glm::length(light_pos.at(i) - phong_stats.hit_pos);
+        //if the area isn't a shadowed zone then it will do the color calculations else it will just be the ambient component or if shadows are disabled
+        if(!shadow_hit(light_dir,phong_stats.hit_pos, light_dist,objects)){
+            color += light_color.at(i) * (phong_stats.kd* glm::max(0.0f,dot(n,light_dir)) + phong_stats.ks *   pow( glm::max( 0.0f, dot(n,h)) , (float)phong_stats.s ));    
+        }
+
+        }
+        
+
+
+        
+        
+        if( phong_stats.reflect && counter < 6){
+                counter++;
+                vec3 reflect_ray = normalize(glm::reflect(Ray,phong_stats.hit_norm));
+              color += ray_color_recur(reflect_ray,phong_stats.hit_pos,objects,light_pos,light_color,phong_stats,counter);  
+            }
+
+        }
+        return color;
+    }
+    
+    
+    // colors pixels based on data given 
   //ray color generation which takes in the ray, ray origin, list of objects, list of light pos and colors 
   // mode 0 for no shadows, mode 1 for shadows, mode 2 for shadows and single bounce and mode 3 for shadows and multibounce
 vec3 ray_color_gen(vec3 Ray,vec3 ray_origin ,vector<Object*> &objects, vector<vec3>& light_pos, vector<vec3>& light_color,int mode){
-
+       
+        int counter = (mode > 2) ? 0:6;
+      
         vec3 color = vec3(0.0,0.0,0.0);
         //will be overwritten when passed into the function 
        RESULTS phong_stats;
        if( Ray_Hit(Ray,ray_origin,objects,phong_stats)){
          color = phong_stats.ka;
-
-      
+        
         
       //normalizes as a precautionary measure
         vec3 n = normalize(phong_stats.hit_norm);
@@ -358,30 +407,18 @@ vec3 ray_color_gen(vec3 Ray,vec3 ray_origin ,vector<Object*> &objects, vector<ve
         double light_dist = glm::length(light_pos.at(i) - phong_stats.hit_pos);
         //if the area isn't a shadowed zone then it will do the color calculations else it will just be the ambient component or if shadows are disabled
         if(!shadow_hit(light_dir,phong_stats.hit_pos, light_dist,objects) || mode == 0){
-            color += light_color.at(i) * (phong_stats.kd* glm::max(0.0f,dot(n,light_dir)) + phong_stats.ks *   pow( glm::max( 0.0f, dot(n,h)) , (float)phong_stats.s )     );
-
+            color += light_color.at(i) * (phong_stats.kd* glm::max(0.0f,dot(n,light_dir)) + phong_stats.ks *   pow( glm::max( 0.0f, dot(n,h)) , (float)phong_stats.s )     );            
         }
-        
-        //will deal with shadows in here using shadow tracer
-        
-
-        }
-        //printf("color of hit object is (%f,%f,%f)",color.x,color.y,color.z);
-    
        }
 
+        if( phong_stats.reflect){
+                counter++;
+                vec3 reflect_ray = normalize(glm::reflect(Ray,phong_stats.hit_norm));
+              color += ray_color_recur(reflect_ray,phong_stats.hit_pos,objects,light_pos,light_color,phong_stats,counter);  
+            }
+
+        }
        return color;
-    }
-
-    vec3 ray_color_recurs(vec3 Ray, vec3 ray_origin, &objects, int counter){
-        
-        
-
-        
-
-    }
-    
-    
-    
+    }  
     
 #endif

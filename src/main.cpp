@@ -6,7 +6,7 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <iostream>
-
+#include <threads>
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
@@ -164,7 +164,7 @@ int main(int argc, char **argv)
 		light_color.push_back(vec3(0.5,0.5,0.5));
 
 		//generates ellipsoid(for the ellipsoid use translate to ensure we move it before scaling) plane and sphere
-		objects.push_back(new Ellipsoid(vec3(0.0,0.0,0.0),vec3(1.0,0.0,0.0),vec3(0.1,0.1,0.1),vec3(1.0,1.0,0.5),100.0,vec3(0.5,0.0,0.5),vec3(0.5, 0.6, 0.2)));
+		objects.push_back(new Ellipsoid(vec3(0.0,0.0,0.0),vec3(1.0,0.0,0.0),vec3(0.1,0.1,0.1),vec3(1.0,1.0,0.5),100.0,0,vec3(0.5,0.0,0.5),vec3(0.5, 0.6, 0.2)));
 		objects.push_back(new Ellipsoid(vec3(-0.5, 0.0, -0.5),vec3(0.0,1.0,0.0),vec3(0.1,0.1,0.1),vec3(1.0,1.0,0.5),100.0));
 		objects.push_back(new plane(vec3(0.0,1.0,0.0),vec3(0.0,-1.0,0.0),vec3(1.0,1.0,1.0),vec3(0.1,0.1,0.1),vec3(0,0,0),0.0));
 
@@ -180,6 +180,84 @@ int main(int argc, char **argv)
 		
 		break;
 	}
+
+	case 4:
+	{
+		//adds the multiples lights for the scene
+		light_pos.push_back(vec3(-1.0, 2.0, 1.0));
+		light_color.push_back(vec3(0.5,0.5,0.5));		
+		light_pos.push_back(vec3(0.5, -0.5, 0.0));
+		light_color.push_back(vec3(0.5,0.5,0.5));
+
+		objects.push_back(new Ellipsoid(vec3(0.0,0.0,0.0),vec3(1.0,0.0,0.0),vec3(0.1,0.1,0.1),vec3(1.0,1.0,0.5),100.0,0,vec3(0.5, -0.7, 0.5),vec3(0.3, 0.3, 0.3)));
+		objects.push_back(new Ellipsoid(vec3(0.0,0.0,0.0),vec3(0.0,0.0,1.0),vec3(0.1,0.1,0.1),vec3(1.0,1.0,0.5),100.0,0,vec3(1.0, -0.7, 0.0),vec3(0.3, 0.3, 0.3)));
+		//reflective spheres
+		objects.push_back(new Ellipsoid(vec3(0.0,0.0,0.0),vec3(0.0,0.0,0.0),vec3(0.0,0.0,0.0),vec3(0.0,0.0,0.0),100.0,1,vec3(-0.5, 0.0, -0.5)));
+		objects.push_back(new Ellipsoid(vec3(0.0,0.0,0.0),vec3(0.0,0.0,0.0),vec3(0.0,0.0,0.0),vec3(0.0,0.0,0.0),100.0,1,vec3(1.5, 0.0, -1.5)));
+
+
+		objects.push_back(new plane(vec3(0.0,0.0,1.0),vec3(0.0,0.0,-3.0),vec3(1.0,1.0,1.0),vec3(0.1,0.1,0.1),vec3(0,0,0),0.0));
+		objects.push_back(new plane(vec3(0.0,1.0,0.0),vec3(0.0,-1.0,0.0),vec3(1.0,1.0,1.0),vec3(0.1,0.1,0.1),vec3(0,0,0),0.0));
+		
+
+
+
+		for(int n = 0 ; n < (int)rays.size() ;n++){
+		//calls ray generation 
+		vec3 color = ray_color_gen(rays.at(n),vec3(0.0,0.0,5.0),objects,light_pos,light_color,2);
+		 color.x = (color.x *255 > 255)? 255 : color.x * 255;
+		 color.y = (color.y*255 > 255)? 255 : color.y * 255;
+		 color.z = (color.z*255 > 255)? 255 : color.z * 255;
+		 //does this since we are starting at bottom left corner so x is incrementing col 0 to n while y is incrementing from row n to  0
+		image->setPixel((n)%width,(rays.size() - 1 -n )/height,color.r,color.g,color.b);
+		}
+	break;
+	}
+	case 5:
+	{
+		//adds the multiples lights for the scene
+		light_pos.push_back(vec3(-1.0, 2.0, 1.0));
+		light_color.push_back(vec3(0.5,0.5,0.5));		
+		light_pos.push_back(vec3(0.5, -0.5, 0.0));
+		light_color.push_back(vec3(0.5,0.5,0.5));
+
+		objects.push_back(new Ellipsoid(vec3(0.0,0.0,0.0),vec3(1.0,0.0,0.0),vec3(0.1,0.1,0.1),vec3(1.0,1.0,0.5),100.0,0,vec3(0.5, -0.7, 0.5),vec3(0.3, 0.3, 0.3)));
+		objects.push_back(new Ellipsoid(vec3(0.0,0.0,0.0),vec3(0.0,0.0,1.0),vec3(0.1,0.1,0.1),vec3(1.0,1.0,0.5),100.0,0,vec3(1.0, -0.7, 0.0),vec3(0.3, 0.3, 0.3)));
+		//reflective spheres
+		objects.push_back(new Ellipsoid(vec3(0.0,0.0,0.0),vec3(0.0,0.0,0.0),vec3(0.0,0.0,0.0),vec3(0.0,0.0,0.0),100.0,1,vec3(-0.5, 0.0, -0.5)));
+		objects.push_back(new Ellipsoid(vec3(0.0,0.0,0.0),vec3(0.0,0.0,0.0),vec3(0.0,0.0,0.0),vec3(0.0,0.0,0.0),100.0,1,vec3(1.5, 0.0, -1.5)));
+
+
+		objects.push_back(new plane(vec3(0.0,0.0,1.0),vec3(0.0,0.0,-3.0),vec3(1.0,1.0,1.0),vec3(0.1,0.1,0.1),vec3(0,0,0),0.0));
+		objects.push_back(new plane(vec3(0.0,1.0,0.0),vec3(0.0,-1.0,0.0),vec3(1.0,1.0,1.0),vec3(0.1,0.1,0.1),vec3(0,0,0),0.0));
+		
+
+
+
+		for(int n = 0 ; n < (int)rays.size() ;n++){
+		//calls ray generation 
+		vec3 color = ray_color_gen(rays.at(n),vec3(0.0,0.0,5.0),objects,light_pos,light_color,3);
+		 color.x = (color.x *255 > 255)? 255 : color.x * 255;
+		 color.y = (color.y*255 > 255)? 255 : color.y * 255;
+		 color.z = (color.z*255 > 255)? 255 : color.z * 255;
+		 //does this since we are starting at bottom left corner so x is incrementing col 0 to n while y is incrementing from row n to  0
+		image->setPixel((n)%width,(rays.size() - 1 -n )/height,color.r,color.g,color.b);
+		}
+	break;
+	}
+	case 6:
+	{
+		
+
+
+	break;
+	}
+	case 7:
+	{
+	break;
+	}
+
+
 
 	default:
 	printf("scenes 1 - 7 only available try again :)\n");
