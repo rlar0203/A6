@@ -1,5 +1,5 @@
 CMakeFiles/A6.dir/src/Image.cpp.o: \
- /mnt/c/Users/rlar0/Documents/Programming\ assignment/CSCE\ 441/A6/src/Image.cpp \
+ /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/A6/src/Image.cpp \
  /usr/include/stdc-predef.h /usr/include/c++/11/iostream \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \
@@ -34,9 +34,8 @@ CMakeFiles/A6.dir/src/Image.cpp.o: \
  /usr/include/c++/11/bits/exception_defines.h \
  /usr/include/c++/11/bits/cxxabi_init_exception.h \
  /usr/include/c++/11/typeinfo /usr/include/c++/11/bits/hash_bytes.h \
- /usr/include/c++/11/new /usr/include/c++/11/bits/move.h \
- /usr/include/c++/11/type_traits \
- /usr/include/c++/11/bits/nested_exception.h \
+ /usr/include/c++/11/new /usr/include/c++/11/bits/nested_exception.h \
+ /usr/include/c++/11/bits/move.h /usr/include/c++/11/type_traits \
  /usr/include/c++/11/bits/char_traits.h \
  /usr/include/c++/11/bits/stl_algobase.h \
  /usr/include/c++/11/bits/functexcept.h \
@@ -147,12 +146,12 @@ CMakeFiles/A6.dir/src/Image.cpp.o: \
  /usr/include/c++/11/bits/ostream.tcc /usr/include/c++/11/istream \
  /usr/include/c++/11/bits/istream.tcc /usr/include/c++/11/cassert \
  /usr/include/assert.h \
- /mnt/c/Users/rlar0/Documents/Programming\ assignment/CSCE\ 441/A6/src/Image.h \
+ /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/A6/src/Image.h \
  /usr/include/c++/11/vector /usr/include/c++/11/bits/stl_uninitialized.h \
  /usr/include/c++/11/bits/stl_vector.h \
  /usr/include/c++/11/bits/stl_bvector.h \
  /usr/include/c++/11/bits/vector.tcc \
- /mnt/c/Users/rlar0/Documents/Programming\ assignment/CSCE\ 441/A6/src/stb_image_write.h \
+ /mnt/c/Users/rlar0/Documents/C++_files/CSCE\ 441/A6/src/stb_image_write.h \
  /usr/include/c++/11/stdlib.h /usr/include/string.h \
  /usr/include/strings.h /usr/include/c++/11/math.h \
  /usr/include/c++/11/cmath /usr/include/math.h \

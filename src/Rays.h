@@ -134,6 +134,7 @@ struct RESULTS{
             //transforms the ray vectors into local space (if it is an identiy matrix will remain the same)
             vec3 T_raydir = vec3((inverse(E) * vec4(Ray_dir, 0.0))); //uses 0 for homo coord
             vec3 T_rayorig = vec3((inverse(E) * vec4(Ray_origin, 1.0))); //uses 1 for homo coord
+                T_raydir = normalize(T_raydir);
 
             vector<vec3> Results(3,vec3(0.0,0.0,0.0));
 
@@ -171,6 +172,7 @@ struct RESULTS{
 
             //calculates the normal 
             Results.at(2) = (Results.at(1) - point)/ static_cast<float>(radius);
+            Results.at(2) = normalize(Results.at(2));
         }
         //handles condition is near 0  (1 HIT)
         else{
@@ -184,7 +186,7 @@ struct RESULTS{
 
             //calculates the normal 
             Results.at(2) = (Results.at(1) - point) /  static_cast<float>(radius);
-
+            Results.at(2) = normalize(Results.at(2));
             
         }
          //transforms hit pos and hit norm back to world coords and rederives the distance in world coords
@@ -193,7 +195,7 @@ struct RESULTS{
 
            
         //renormalizes just in case of length no longer being 1 for normal.
-        Results.at(2) =   vec3(E * vec4(Results.at(2), 0.0));
+        Results.at(2) =   vec3(inverse(transpose(E)) * vec4(Results.at(2), 0.0));
         Results.at(2) = normalize(Results.at(2));
 
 
@@ -261,7 +263,7 @@ struct RESULTS{
     int shape_index = -1;
     return_values = shapes.at(0)->single_raytrace(ray_dir, ray_origin);
     //sets to first shape to first shape distance 
-    min_dist = return_values.at(0).x;
+    min_dist = INFINITY;
 
     //loops through each shape tries to find the minimum postive distance
     for (int i = 0; i < (int)shapes.size(); i++)
@@ -270,7 +272,9 @@ struct RESULTS{
         return_values = shapes.at(i)->single_raytrace(ray_dir, ray_origin);
 
    //only swtiches our min dist to current dist if both are postive and min > curr    or  min is a negative and the curr min is postive
-     if( (min_dist >= 0 && min_dist >= return_values.at(0).x && return_values.at(0).x >= 0) || (min_dist < 0 && return_values.at(0).x > 0) ){
+     if(min_dist > return_values.at(0).x && return_values.at(0).x >= 0){
+        phong_info.hit_pos = return_values.at(1);
+        phong_info.hit_norm = return_values.at(2);
              min_dist = return_values.at(0).x;
             shape_index = i;
         }
@@ -278,7 +282,7 @@ struct RESULTS{
 
         //value will continue to stay the same if both values are negative or  min is still less than current dist  
     }
-    if(min_dist >= 0){
+    if( min_dist != INFINITY){
 
 
 
@@ -288,26 +292,60 @@ struct RESULTS{
         phong_info.s = shapes.at(shape_index)->s;
 
     } 
-        phong_info.hit_pos = return_values.at(1);
-        phong_info.hit_norm = return_values.at(2);
+ 
+
         phong_info.distance = min_dist;
 
-    hit = (min_dist >= 0.0001)? 1 : 0 ;
+    hit = (min_dist != INFINITY) ? 1 : 0 ;
+    if(hit){
+        
+     //   printf("ray has hit %d at (%f,%f,%f) with distance %f\n", shape_index ,phong_info.hit_pos.x,phong_info.hit_pos.y,phong_info.hit_pos.z,phong_info.distance);
+    }
    
     return hit;
 }
+    //TAKES IN THE SHADOWRAY(LIGHTVECTOR ) , SHADOWRAY ORIGIN(HIT POS OF OBJECT), LIST OF OBJECTS
+ bool shadow_hit(vec3 Sray,vec3 Sray_orig, double light_dist ,vector<Object*>& shapes){
+    bool hit = 0;
+    //makes the shadow slightly off the surface to avoid intersection with itself when not supposed to (no overhangs present)
+    Sray_orig = Sray_orig + 0.0001f;
+    vector<vec3> return_values(3);
+
+    //tests the ray against all possible objects
+    for (int i = 0; i < (int)shapes.size(); i++)
+    {
+        
+        return_values = shapes.at(i)->single_raytrace(Sray, Sray_orig);
+        //if at any moment the shadow hits an object the bool will be set indicating that surface should be shadow
+        //and only will count if object is closer to the shadow origin then the light and infront of the point (non negative)
+        if(return_values.at(0).x >= 0 && light_dist > return_values.at(0).x ){
+            hit  = 1;
+        }
+    }
+
+
+
+    return hit;
+
+ }
+
+
  
+
+
   // colors pixels based on data given 
-  
-vec3 ray_color_gen(vec3 Ray,vec3 ray_origin ,vector<Object*> &objects, vector<vec3>& light_pos, vector<vec3>& light_color){
+  //ray color generation which takes in the ray, ray origin, list of objects, list of light pos and colors 
+  // mode 0 for no shadows, mode 1 for shadows, mode 2 for shadows and single bounce and mode 3 for shadows and multibounce
+vec3 ray_color_gen(vec3 Ray,vec3 ray_origin ,vector<Object*> &objects, vector<vec3>& light_pos, vector<vec3>& light_color,int mode){
 
         vec3 color = vec3(0.0,0.0,0.0);
         //will be overwritten when passed into the function 
        RESULTS phong_stats;
        if( Ray_Hit(Ray,ray_origin,objects,phong_stats)){
-        vec3 color = phong_stats.ka;
+         color = phong_stats.ka;
 
-        printf("hit\n");
+      
+        
       //normalizes as a precautionary measure
         vec3 n = normalize(phong_stats.hit_norm);
          vec3 e = normalize(ray_origin - phong_stats.hit_pos);
@@ -317,26 +355,29 @@ vec3 ray_color_gen(vec3 Ray,vec3 ray_origin ,vector<Object*> &objects, vector<ve
         vec3 light_dir = normalize(light_pos.at(i) - phong_stats.hit_pos);
        
         vec3 h = normalize(light_dir + e);
-        float max2 = glm::max( 0.0f, dot(n,h));
-        
-        color += light_color.at(i) * (phong_stats.kd* glm::max(0.0f,dot(n,light_dir)) + phong_stats.ks *   pow( max2 , (float)phong_stats.s )     );
+        double light_dist = glm::length(light_pos.at(i) - phong_stats.hit_pos);
+        //if the area isn't a shadowed zone then it will do the color calculations else it will just be the ambient component or if shadows are disabled
+        if(!shadow_hit(light_dir,phong_stats.hit_pos, light_dist,objects) || mode == 0){
+            color += light_color.at(i) * (phong_stats.kd* glm::max(0.0f,dot(n,light_dir)) + phong_stats.ks *   pow( glm::max( 0.0f, dot(n,h)) , (float)phong_stats.s )     );
 
         }
-        return color;
-    
-       }
-        //will deal with shadows in here using shadow tracer
-       else{
-        //colors image black if not hit 
         
-        color = vec3(0,0,0);
+        //will deal with shadows in here using shadow tracer
+        
+
+        }
+        //printf("color of hit object is (%f,%f,%f)",color.x,color.y,color.z);
+    
        }
 
        return color;
-        
+    }
+
+    vec3 ray_color_recurs(vec3 Ray, vec3 ray_origin, &objects, int counter){
         
         
 
+        
 
     }
     

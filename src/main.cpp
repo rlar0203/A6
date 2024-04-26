@@ -38,15 +38,18 @@ double RANDOM_COLORS[7][3] = {
 int main(int argc, char **argv)
 {
 	if(argc < 2) {
-		cout << "Usage: A1 meshfile" << endl;
+		cout << "Usage: ./A6 <scene> <image size> <image filename>" << endl;
 		return 0;
 	}
-	string meshName(argv[1]);
-	string output_name(argv[2]);
-		int width = 10;
-		int height = 10;
+	
+	string meshName("placeholder");
+	string output_name(argv[3]);
+		int width = stoi(argv[2]);
+		int height = stoi(argv[2]);
 		//int scene;
 		shared_ptr<Image> image = make_shared<Image>(width, height);
+	//only loads object in if we are doing scene 6 or scene 7
+	 if(stoi(argv[1]) >= 6){
 	// Load geometry
 	vector<float> posBuf; // list of vertex positions
 	vector<float> norBuf; // list of vertex normals
@@ -92,37 +95,61 @@ int main(int argc, char **argv)
 			}
 		}
 	}
-	cout << "Number of vertices: " << posBuf.size()/3 << endl;
 
-//chooses the scene dependent on the integer passed thorguh
+	cout << "Number of vertices: " << posBuf.size()/3 << endl;
+	}
+	//initalize the rays and objects to be used for the multiple scenes
+	vector<Object*> objects;
+	vector<vec3> rays = Ray_gen(vec3(0.0,0.0,5.0),vec3(0.0,0.0,4.0),height,width);
+	vector<vec3> light_pos;
+	vector<vec3> light_color;
+
+	//chooses the scene dependent on the integer passed thorguh
 	switch (stoi(argv[1]))
 	{
 		//just testing hit detection
 	case 1:
 	{	
-		vector<vec3> rays = Ray_gen(vec3(0.0,0.0,5.0),vec3(0.0,0.0,4.0),height,width);
 		
-		vector<Object*> test;
-		vector<vec3> light_pos;
-		vector<vec3> light_color;
 		light_pos.push_back(vec3(-2.0, 1.0, 1.0));
 		light_color.push_back(vec3(1.0,1.0,1.0));
-		test.push_back(new Ellipsoid(vec3(-0.5,-1.0,1.0),vec3(1.0,0.0,0.0),vec3(0.1,0.1,0.1),vec3(1.0,1.0,0.5),100.0));
-		test.push_back(new Ellipsoid(vec3(0.5, -1.0, -1.0),vec3(0.0,1.0,0.0),vec3(0.1,0.1,0.1),vec3(1.0,1.0,0.5),100.0));
-		//test.push_back(new Ellipsoid(vec3(0.0, 1.0, 0.0),vec3(1.0,0.0,0.0),vec3(0.1,0.1,0.1),vec3(1.0,1.0,0.5),100.0));
+		//generates
+		objects.push_back(new Ellipsoid(vec3(-0.5, -1.0, 1.0),vec3(1.0,0.0,0.0),vec3(0.1,0.1,0.1),vec3(1.0,1.0,0.5),100.0));
+		objects.push_back(new Ellipsoid(vec3(0.5, -1.0, -1.0),vec3(0.0,1.0,0.0),vec3(0.1,0.1,0.1),vec3(1.0,1.0,0.5),100.0));
+		objects.push_back(new Ellipsoid(vec3(0.0, 1.0, 0.0),vec3(0.0,0.0,1.0),vec3(0.1,0.1,0.1),vec3(1.0,1.0,0.5),100.0));
 
 	for(int n = 0 ; n < (int)rays.size() ;n++){
-
-		vec3 color = ray_color_gen(rays.at(n),vec3(0.0,0.0,5.0),test,light_pos,light_color);
+		//calls ray generation 
+		vec3 color = ray_color_gen(rays.at(n),vec3(0.0,0.0,5.0),objects,light_pos,light_color,0);
 		 color.x = (color.x *255 > 255)? 255 : color.x * 255;
 		 color.y = (color.y*255 > 255)? 255 : color.y * 255;
 		 color.z = (color.z*255 > 255)? 255 : color.z * 255;
-		image->setPixel(n/width,n%width,color.r,color.g,color.b);
+		 //does this since we are starting at bottom left corner so x is incrementing col 0 to n while y is incrementing from row n to  0
+		image->setPixel((n)%width,(rays.size() - 1 -n )/height,color.r,color.g,color.b);
+		
 	 }
 	 break;
 	}
 	case 2:
 	{
+
+		light_pos.push_back(vec3(-2.0, 1.0, 1.0));
+		light_color.push_back(vec3(1.0,1.0,1.0));
+		//generates
+		objects.push_back(new Ellipsoid(vec3(-0.5, -1.0, 1.0),vec3(1.0,0.0,0.0),vec3(0.1,0.1,0.1),vec3(1.0,1.0,0.5),100.0));
+		objects.push_back(new Ellipsoid(vec3(0.5, -1.0, -1.0),vec3(0.0,1.0,0.0),vec3(0.1,0.1,0.1),vec3(1.0,1.0,0.5),100.0));
+		objects.push_back(new Ellipsoid(vec3(0.0, 1.0, 0.0),vec3(0.0,0.0,1.0),vec3(0.1,0.1,0.1),vec3(1.0,1.0,0.5),100.0));
+
+	for(int n = 0 ; n < (int)rays.size() ;n++){
+		//calls ray generation 
+		vec3 color = ray_color_gen(rays.at(n),vec3(0.0,0.0,5.0),objects,light_pos,light_color,1);
+		 color.x = (color.x *255 > 255)? 255 : color.x * 255;
+		 color.y = (color.y*255 > 255)? 255 : color.y * 255;
+		 color.z = (color.z*255 > 255)? 255 : color.z * 255;
+		 //does this since we are starting at bottom left corner so x is incrementing col 0 to n while y is incrementing from row n to  0
+		image->setPixel((n)%width,(rays.size() - 1 -n )/height,color.r,color.g,color.b);
+	}
+
 
 	break;
 	}
@@ -130,15 +157,36 @@ int main(int argc, char **argv)
 	
 	case 3:
 	{
+		//adds the multiples lights for the scene
+		light_pos.push_back(vec3(1.0, 2.0, 2.0));
+		light_color.push_back(vec3(0.5,0.5,0.5));		
+		light_pos.push_back(vec3(-1.0, 2.0, -1.0));
+		light_color.push_back(vec3(0.5,0.5,0.5));
 
+		//generates ellipsoid(for the ellipsoid use translate to ensure we move it before scaling) plane and sphere
+		objects.push_back(new Ellipsoid(vec3(0.0,0.0,0.0),vec3(1.0,0.0,0.0),vec3(0.1,0.1,0.1),vec3(1.0,1.0,0.5),100.0,vec3(0.5,0.0,0.5),vec3(0.5, 0.6, 0.2)));
+		objects.push_back(new Ellipsoid(vec3(-0.5, 0.0, -0.5),vec3(0.0,1.0,0.0),vec3(0.1,0.1,0.1),vec3(1.0,1.0,0.5),100.0));
+		objects.push_back(new plane(vec3(0.0,1.0,0.0),vec3(0.0,-1.0,0.0),vec3(1.0,1.0,1.0),vec3(0.1,0.1,0.1),vec3(0,0,0),0.0));
+
+		for(int n = 0 ; n < (int)rays.size() ;n++){
+		//calls ray generation 
+		vec3 color = ray_color_gen(rays.at(n),vec3(0.0,0.0,5.0),objects,light_pos,light_color,1);
+		 color.x = (color.x *255 > 255)? 255 : color.x * 255;
+		 color.y = (color.y*255 > 255)? 255 : color.y * 255;
+		 color.z = (color.z*255 > 255)? 255 : color.z * 255;
+		 //does this since we are starting at bottom left corner so x is incrementing col 0 to n while y is incrementing from row n to  0
+		image->setPixel((n)%width,(rays.size() - 1 -n )/height,color.r,color.g,color.b);
+	}
 		
-
+		break;
 	}
 
 	default:
+	printf("scenes 1 - 7 only available try again :)\n");
+		exit(1);
 		break;
 	}
 		//writes out the image to certain filename.
-	image->writeToFile("TEST_output.png");
+	image->writeToFile(output_name);
 	return 0;
 }
